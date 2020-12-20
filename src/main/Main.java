@@ -1,3 +1,8 @@
+/****************************
+ * Datum      17.12.2020    *
+ * @version   1             *
+ * @author    Sarah Haboeck *
+ ****************************/
 package main;
 
 import javafx.application.Application;
