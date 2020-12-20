@@ -55,8 +55,8 @@ public class Controller implements Initializable {
             }
         }
 
+        showList();
         textField.setText(stack.get(index));
-        stacktoString();
     }
     @FXML
     private void clickOptionblock(MouseEvent event) {
@@ -76,37 +76,33 @@ public class Controller implements Initializable {
             isdot=false;
             isnewitem=true;
         }
-        else if (s.equals("")){
-
-        }
-        /*if (stack.empty()){
-            stack.push(s);
-        }
         else {
-            if (s.equals("-")){
+            stack.pop();
+            textField.clear();
+            if (s.equals("C")){
+                do {
+                stack.pop();
+                } while (!stack.empty());
+            }
 
-            }
-            else {
-                stack.push(stack.pop() + s);
-                textField.setText(stack.get(index));
-            }
         }
-        stacktoString();*/
+        showList();
     }
 
     @FXML
     private void clickOperatorblock(MouseEvent event) {
     }
 
-    private void stacktoString(){
-        System.out.println("Stack");
+    private String stacktoString(){
+        StringBuilder sb =new StringBuilder();
         for (int i=0; i<stack.size();i++){
-            System.out.println(i+":"+stack.get(i));
+            sb.append(i+":"+stack.get(i)+"\n");
         }
+        return sb.toString();
     }
 
-    private void showList(Stack s){
-
+    private void showList(){
+            textArea.setText(stacktoString());
     }
 
     @Override
