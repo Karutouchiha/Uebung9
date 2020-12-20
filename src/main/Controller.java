@@ -75,14 +75,15 @@ public class Controller implements Initializable {
         else {
             stack.pop();
             textField.clear();
-            index--;
+            if (!stack.empty()){
+                index--;
+            }
             if (s.equals("C")){
-                do {
+                while (!stack.empty()){
                 stack.pop();
-                } while (!stack.empty());
+                }
                 index=0;
             }
-
         }
         showList();
     }
@@ -96,14 +97,24 @@ public class Controller implements Initializable {
         Double popy;
         try {
             popx = Double.parseDouble(stack.pop());
-            popy = Double.parseDouble(stack.pop());
+            try{
+                popy = Double.parseDouble(stack.pop());
+            }
+            catch (Exception ex){
+                popy=null;
+            }
+        }
+        catch (Exception e){
+            popx=null;
+            popy=null;
+        }
 
-            if (s.equals("1/x") && !stack.empty()){
+            if (s.equals("1/x") && popx!=null){
                 stack.push(popy.toString());
                 popx = 1/popx;
                 stack.push(popx.toString());
             }
-            else if (stack.size()<2){
+            else if (popx!=null && popy!=null){
                 Double erg;
 
                 if (s.equals("x<–>y")) {
@@ -128,11 +139,16 @@ public class Controller implements Initializable {
                 }
                 stack.push(erg.toString());
             }
-        }
-        catch (Exception ex){
-            textField.clear();
-            textField.setPromptText("Es sind nicht genügend Zahlen vorhanden!");
-        }
+            else {
+                textField.clear();
+                textField.setPromptText("Es sind nicht genügend Zahlen vorhanden!");
+                if (popx!=null){
+                    stack.push(popx.toString());
+                    if (popy!=null) {
+                        stack.push(popy.toString());
+                    }
+                }
+            }
         showList();
     }
 
@@ -156,5 +172,6 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         textArea.setEditable(false);
+        textField.setEditable(false);
     }
 }
