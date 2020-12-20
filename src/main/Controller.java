@@ -64,12 +64,8 @@ public class Controller implements Initializable {
         Button btn = (Button)node;
         String s = btn.getText();
         if (stack.empty()) {
-            try {
-                stack.push(s);
-            } catch (Exception ex) {
                 textField.clear();
-                textField.setPromptText("Es muss zuerst eine zahl eingegeben werden.");
-            }
+                textField.setPromptText("Es muss zuerst eine Zahl eingegeben werden.");
         }
         else if (s.equals("Enter")){
             index++;
@@ -79,10 +75,12 @@ public class Controller implements Initializable {
         else {
             stack.pop();
             textField.clear();
+            index--;
             if (s.equals("C")){
                 do {
                 stack.pop();
                 } while (!stack.empty());
+                index=0;
             }
 
         }
@@ -91,18 +89,68 @@ public class Controller implements Initializable {
 
     @FXML
     private void clickOperatorblock(MouseEvent event) {
+        Object node = event.getSource();
+        Button btn = (Button)node;
+        String s = btn.getText();
+        Double popx;
+        Double popy;
+        try {
+            popx = Double.parseDouble(stack.pop());
+            popy = Double.parseDouble(stack.pop());
+
+            if (s.equals("1/x") && !stack.empty()){
+                stack.push(popy.toString());
+                popx = 1/popx;
+                stack.push(popx.toString());
+            }
+            else if (stack.size()<2){
+                Double erg;
+
+                if (s.equals("x<–>y")) {
+                    stack.push(popx.toString());
+                    erg = popy;
+                }
+                else if (s.equals("*")) {
+                    erg = popx * popy;
+                    index--;
+                }
+                else if (s.equals("/")) {
+                    erg = popx / popy;
+                    index--;
+                }
+                else if (s.equals("+")) {
+                    erg = popx + popy;
+                    index--;
+                }
+                else {
+                    erg = popx - popy;
+                    index--;
+                }
+                stack.push(erg.toString());
+            }
+        }
+        catch (Exception ex){
+            textField.clear();
+            textField.setPromptText("Es sind nicht genügend Zahlen vorhanden!");
+        }
+        showList();
     }
 
     private String stacktoString(){
         StringBuilder sb =new StringBuilder();
-        for (int i=0; i<stack.size();i++){
-            sb.append(i+":"+stack.get(i)+"\n");
+        for (int i=stack.size()-1; i>-1;i--){
+            if (stack.size()-1==i){
+                sb.append("x:"+stack.get(i)+"\n");
+            }
+            else {
+                sb.append(i+":"+stack.get(i)+"\n");
+            }
         }
         return sb.toString();
     }
 
     private void showList(){
-            textArea.setText(stacktoString());
+        textArea.setText(stacktoString());
     }
 
     @Override
